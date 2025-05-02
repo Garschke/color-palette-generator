@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Color Palette Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Color Palette Generator</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Analyze Image</button>
+        </form>
+
+        {% if uploaded_image %}
+        <div class="results">
+            <div class="image-preview">
+                <h2>Your Image</h2>
+                <img src="{{ url_for('static', filename='images/' + uploaded_image) }}" alt="Uploaded Image">
+            </div>
+
+            <div class="color-palette">
+                <h2>Dominant Colors</h2>
+                <div class="colors-container">
+                    {% for color in colors %}
+                    <div class="color-item" onclick="copyToClipboard('{{ color.hex }}')">
+                        <div class="color-box" style="background-color: {{ color.hex }};"></div>
+                        <div class="color-info">
+                            <span class="color-name">{{ color.name }}</span>
+                            <span class="color-hex">{{ color.hex }}</span>
+                            <span class="color-percentage">{{ color.percentage }}%</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard: ' + text);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
